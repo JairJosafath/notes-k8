@@ -1,0 +1,34 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: custom-nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: custom-nginx
+  template:
+    metadata:
+      labels:
+        app: custom-nginx
+    spec:
+      containers:
+        - name: custom-nginx
+          image: jairjosafath/k8-notes:latest
+          ports:
+            - containerPort: 80
+---
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: custom-nginx-service
+spec:
+  selector:
+    app: custom-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort
