@@ -1,36 +1,30 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+mod api;
+mod models;
+mod repository;
+
+use actix_web::{get, web::Data, App, HttpResponse, HttpServer, Responder};
+use api::user_api::{create_user, delete_user, get_all_users, get_user, update_user};
+use repository::mongodb_repo::MongoRepo;
 
 #[get("/")]
 async fn hello() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
 
-#[post("/notes")]
-async fn add_note(req_body: String) -> impl Responder {
-    println!("request body: {}", req_body);
-    HttpResponse::Ok().body(req_body)
-}
-
-#[get("/notes")]
-async fn get_notes() -> impl Responder {
-    HttpResponse::Ok().body("get notes")
-}
-
-#[get("/notes/{id}")]
-async fn get_note(id: web::Path<String>) -> impl Responder {
-    println!("get note with id: {}", id);
-    HttpResponse::Ok().body(format!("get note with id: {}", id))
-}
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
-        App::new()
-            .service(hello)
-            .service(add_note)
-            .service(get_notes)
-            .service(get_note)
+    let db = MongoRepo::init().await;
+    let db_data = Data::new(db);
 
+    HttpServer::new(move || {
+        App::new()
+            .app_data(db_data.clone())
+            .service(create_user)
+            .service(hello)
+            .service(get_user)
+            .service(update_user)
+            .service(delete_user)
+            .service(get_all_users)
     })
     .bind(("0.0.0.0", 8080))?
     .run()
