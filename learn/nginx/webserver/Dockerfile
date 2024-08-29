@@ -10,5 +10,5 @@ COPY ./static /usr/share/nginx/html
 # Expose port 80
 EXPOSE 80
 
-# Start Nginx
+# Start Nginx nginx -s signal
 CMD ["nginx", "-g", "daemon off;"]
