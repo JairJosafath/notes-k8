@@ -1,10 +1,8 @@
 #if you have wsl, just run bash first to activate linux subsystem and run chmod +x update-deployment.sh
 # then you can run this script with ./update-deployment.sh
-# update the names like my-custom-nginx, jairjosafath/k8-notes to your own
+# update the names like notes-nginx-webserver, jairjosafath/notes-nginx-webserver to your own
 # build docker image
-docker build -t my-custom-nginx .
+docker build -t notes-nginx-webserver .
 # tag and push to docker hub
-docker tag my-custom-nginx:latest jairjosafath/k8-notes:latest
-docker push jairjosafath/k8-notes:latest
-#echo "Deployment updated"
-echo "Deployment updated"
+docker tag notes-nginx-webserver:latest jairjosafath/notes-nginx-webserver:latest
+docker push jairjosafath/notes-nginx-webserver:latest

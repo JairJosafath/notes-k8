@@ -2,20 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: custom-nginx-deployment
+  name: notes-nginx-webserver
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: custom-nginx
+      app: notes-nginx-webserver
   template:
     metadata:
       labels:
-        app: custom-nginx
+        app: notes-nginx-webserver
     spec:
       containers:
-        - name: custom-nginx
-          image: jairjosafath/k8-notes:latest
+        - name: notes-nginx-webserver
+          image: jairjosafath/notes-nginx-webserver:latest
           ports:
             - containerPort: 80
 ---
@@ -23,10 +23,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: custom-nginx-service
+  name: notes-nginx-webserver
 spec:
   selector:
-    app: custom-nginx
+    app: notes-nginx-webserver
   ports:
     - protocol: TCP
       port: 80
