@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: actix-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: actix-app
+  template:
+    metadata:
+      labels:
+        app: actix-app
+    spec:
+      containers:
+        - name: actix-app
+          image: jairjosafath/actixs-app:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: username
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: password
+            - name: MONGO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mongodb-configmap
+                  key: database_url
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: actix-app-service
+spec:
+  selector:
+    app: actix-app-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

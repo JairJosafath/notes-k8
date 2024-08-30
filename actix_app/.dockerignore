@@ -1,0 +1,6 @@
+# ignore unneccesaary files in rust actixs
+target
+Cargo.lock
+.env
+deployment.yaml
+update-docker-image.sh
