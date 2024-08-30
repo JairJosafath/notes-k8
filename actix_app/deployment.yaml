@@ -32,7 +32,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: mongodb-configmap
-                  key: database_url
+                  key: database_host
           resources:
             requests:
               memory: "64Mi"
@@ -47,7 +47,7 @@ metadata:
   name: actix-app-service
 spec:
   selector:
-    app: actix-app-service
+    app: actix-app
   ports:
     - protocol: TCP
       port: 80

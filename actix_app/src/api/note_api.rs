@@ -65,7 +65,7 @@ struct TestResponse {
     result: Document,
 }
 
-#[get("/notes/test")]
+#[get("/mongo")]
 pub async fn test(note_repo: web::Data<NoteRepository>) -> impl Responder {
     match note_repo.test().await {
         Ok(result) => HttpResponse::Ok().json(TestResponse {

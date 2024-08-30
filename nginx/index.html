@@ -1,0 +1,129 @@
+<!-- This is ai generated code, so there might be bad-practices in it, at least I did not have to write frontend code, which is a win I will gladly take 🙂‍↕️ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes CRUD Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, textarea {
+            display: block;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 400px;
+        }
+        button {
+            margin: 10px 0;
+        }
+        .note {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Notes CRUD Application</h1>
+
+    <h2>Create Note</h2>
+    <input type="text" id="createTitle" placeholder="Title">
+    <textarea id="createDescription" placeholder="Description"></textarea>
+    <textarea id="createContent" placeholder="Content"></textarea>
+    <button onclick="createNote()">Create Note</button>
+
+    <h2>Notes List</h2>
+    <div id="notesList"></div>
+
+    <script>
+        const apiUrl = 'http://localhost/notes';
+
+        // Function to fetch and list all notes
+        function listNotes() {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const notesList = document.getElementById('notesList');
+                    notesList.innerHTML = '';
+                    data.forEach(note => {
+                        notesList.innerHTML += `
+                            <div class="note">
+                                <h3>${note.title}</h3>
+                                <p><strong>Description:</strong> ${note.description}</p>
+                                <p><strong>Content:</strong> ${note.content}</p>
+                                <button onclick="deleteNote('${note._id["$oid"]}')">Delete</button>
+                                <button onclick="showUpdateForm('${note?._id["$oid"]}', '${note.title}', '${note.description}', '${note.content}')">Update</button>
+                            </div>
+                        `;
+                    });
+                });
+        }
+
+        // Function to create a new note
+        function createNote() {
+            const title = document.getElementById('createTitle').value;
+            const description = document.getElementById('createDescription').value;
+            const content = document.getElementById('createContent').value;
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title, description, content })
+            })
+            .then(response => response.json())
+            .then(() => {
+                listNotes();
+                document.getElementById('createTitle').value = '';
+                document.getElementById('createDescription').value = '';
+                document.getElementById('createContent').value = '';
+            });
+        }
+
+        // Function to delete a note
+        function deleteNote(id) {
+            fetch(`${apiUrl}/${id}`, {
+                method: 'DELETE',
+            })
+            .then(() => listNotes());
+        }
+
+        // Function to show the update form with current note data
+        function showUpdateForm(id, title, description, content) {
+            document.getElementById('notesList').innerHTML = `
+                <h2>Update Note</h2>
+                <input type="text" id="updateTitle" value="${title}">
+                <textarea id="updateDescription">${description}</textarea>
+                <textarea id="updateContent">${content}</textarea>
+                <button onclick="updateNote('${id}')">Update Note</button>
+                <button onclick="listNotes()">Cancel</button>
+            `;
+        }
+
+        // Function to update a note
+        function updateNote(id) {
+            const title = document.getElementById('updateTitle').value;
+            const description = document.getElementById('updateDescription').value;
+            const content = document.getElementById('updateContent').value;
+
+            fetch(`${apiUrl}/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title, description, content })
+            })
+            .then(() => listNotes());
+        }
+
+        // Initial call to list all notes
+        listNotes();
+    </script>
+
+</body>
+</html>

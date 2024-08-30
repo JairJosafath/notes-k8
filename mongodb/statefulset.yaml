@@ -39,7 +39,18 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 100Mi # Should match the size specified in mongodb-pvc.yaml
+            storage: 100Mi # Should match the size specified in the claim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi # Adjust storage size as per your requirements
 ---
 apiVersion: v1
 kind: Service

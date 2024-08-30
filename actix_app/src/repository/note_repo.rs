@@ -23,9 +23,13 @@ impl NoteRepository {
         let password = env::var("MONGO_PASSWORD").expect("MONGO_PASSWORD must be set");
         let host = env::var("MONGO_HOST").expect("MONGO_HOST must be set");
 
-        let uri = format!("mongodb://{}:{}@{}", user_name, password, host)
-            .trim()
-            .to_string();
+        let uri = format!(
+            "mongodb://{}:{}@{}",
+            user_name.trim(),
+            password.trim(),
+            host.trim()
+        )
+        .to_string();
 
         let client = Client::with_uri_str(uri)
             .await
