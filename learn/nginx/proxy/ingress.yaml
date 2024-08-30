@@ -14,7 +14,14 @@ spec:
                 name: notes-nginx-webserver
                 port:
                   number: 80
-          - path: /notes
+          - path: /users
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-world
+                port:
+                  number: 80
+          - path: /user
             pathType: Prefix
             backend:
               service:
