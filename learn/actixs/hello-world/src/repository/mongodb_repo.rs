@@ -18,7 +18,7 @@ impl MongoRepo {
         dotenv().ok();
         // let uri = match env::var("MONGOURI") {
         //     Ok(v) => v.to_string(),
-        //     Err(_) => format!("Error loading env variable"),
+        //     Err(_) => formazt!("Error loading env variable"),
         // };
         let username = env::var("ME_CONFIG_MONGODB_ADMINUSERNAME")
             .expect("Error loading username env variable")
