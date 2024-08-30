@@ -16,10 +16,25 @@ pub struct MongoRepo {
 impl MongoRepo {
     pub async fn init() -> Self {
         dotenv().ok();
-        let uri = match env::var("MONGOURI") {
-            Ok(v) => v.to_string(),
-            Err(_) => format!("Error loading env variable"),
-        };
+        // let uri = match env::var("MONGOURI") {
+        //     Ok(v) => v.to_string(),
+        //     Err(_) => format!("Error loading env variable"),
+        // };
+        let username = env::var("ME_CONFIG_MONGODB_ADMINUSERNAME")
+            .expect("Error loading username env variable")
+            .trim()
+            .to_string();
+        let password = env::var("ME_CONFIG_MONGODB_ADMINPASSWORD")
+            .expect("Error loading password env variable")
+            .trim()
+            .to_string();
+        let host = env::var("ME_CONFIG_MONGODB_SERVER")
+            .expect("Error loading server env variable")
+            .trim()
+            .to_string();
+        let uri = format!("mongodb://{}:{}@{}", username, password, host);
+        // let uri = format!("{}", host);
+        println!("url: {}", uri);
         let client = Client::with_uri_str(uri)
             .await
             .expect("Error connecting to MongoDB");

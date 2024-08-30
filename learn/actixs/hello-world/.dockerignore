@@ -1,3 +1,4 @@
 # ignore unneccesaary files in rust actixs
 target
 Cargo.lock
+.env
